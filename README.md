@@ -7,6 +7,7 @@
 [![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white)](https://mariadb.org)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.x-38BDF8?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com)
+[![Groq](https://img.shields.io/badge/Groq-Llama_3-f55036?style=for-the-badge)](https://groq.com)
 [![License](https://img.shields.io/badge/License-MIT-22C55E?style=for-the-badge)](LICENSE)
 
 **شغلني** — *"Employ Me"* in Arabic
@@ -49,6 +50,7 @@ This project was built to go **beyond just writing code** — practicing the ful
 
 **Backend:** Laravel 12.x · PHP 8.4+ · Eloquent ORM · Laravel Breeze  
 **Frontend:** Blade · Tailwind CSS 4.x · Alpine.js 3.x · Vite  
+**AI/LLM:** Groq API · Llama 3.3 · Background Queues  
 **Database:** MariaDB (Docker) · phpMyAdmin (Docker)  
 **DevOps:** Git · WSL 2 (Ubuntu) · Docker · Railway (hosting)
 
@@ -61,6 +63,9 @@ This project was built to go **beyond just writing code** — practicing the ful
 - 📊 Track application status — `Pending` / `Accepted` / `Rejected`
 - 🔒 Role-based access control — `admin` / `company-owner` / `job-seeker`
 - 📈 Analytics dashboard with active users, vacancies, and conversion rates
+- 🤖 **AI Application Scoring** — Automatic compatibility score (0-10) using Groq API
+- 💡 **AI Feedback** — Instant, actionable feedback for candidates to improve their applications
+- ⚡ **Background Processing** — AI evaluations handled asynchronously via Laravel Queues
 - 🗑️ Soft delete & restore for companies, vacancies, and applications
 
 ---
@@ -77,6 +82,8 @@ This project was built to go **beyond just writing code** — practicing the ful
 | 6 | **Authentication** | Laravel Breeze (session-based) in both apps |
 | 7 | **API Authentication** | Sanctum-ready token-based auth structure |
 | 8 | **Authorization** | Role middleware + Laravel Policies (Gates) |
+| 9 | **AI Integration** | Background evaluation using Groq API & JSON mode |
+| 10 | **Queues & Jobs** | Offloading heavy AI tasks to Database queues |
 
 ---
 
