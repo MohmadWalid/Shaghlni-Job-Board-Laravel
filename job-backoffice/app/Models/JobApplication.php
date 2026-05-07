@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -41,7 +41,7 @@ class JobApplication extends Model
 
     /**
      * Convert ai_generated_score from /100 to /10 (1 decimal place).
-     * e.g. 82 → 8.2
+     * e.g. 82 -> 8.2
      */
     protected function scoreOutOf10(): Attribute
     {
@@ -54,7 +54,7 @@ class JobApplication extends Model
 
     /**
      * Parse ai_generated_feedback into an array of clean bullet-point strings.
-     * Handles newline-separated text and lines starting with -, *, •, or numbers.
+     * Handles newline-separated text and lines starting with -, *, or numbers.
      */
     protected function feedbackBulletPoints(): Attribute
     {
@@ -65,10 +65,12 @@ class JobApplication extends Model
                     return [];
                 }
 
-                $lines = preg_split('/\r?\n|(?<=\.)\s+(?=-\s)|(?<!\d)\.\s+(?=[A-Z])/', $raw);
+                $lines = explode("\n", str_replace("\r\n", "\n", $raw));
                 $points = [];
                 foreach ($lines as $line) {
-                    $clean = preg_replace('/^\s*[-\*•·]\s*|^\s*\d+[\.)\]\s*/', '', $line);
+                    // Strip leading bullet markers: -, *, or numbered list (1. / 1))
+                    $clean = preg_replace('/^\s*[-*]\s*/', '', $line);
+                    $clean = preg_replace('/^\s*\d+[.)]\s*/', '', $clean);
                     $clean = trim($clean);
                     if ($clean !== '') {
                         $points[] = $clean;
@@ -82,7 +84,7 @@ class JobApplication extends Model
 
     /**
      * Resolve a Tailwind colour key based on the score.
-     * emerald ≥ 7 | amber ≥ 5 | rose < 5 | indigo (no score)
+     * emerald >= 7 | amber >= 5 | rose < 5 | indigo (no score)
      */
     protected function scoreColor(): Attribute
     {
