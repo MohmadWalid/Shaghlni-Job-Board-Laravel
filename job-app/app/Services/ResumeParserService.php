@@ -70,6 +70,10 @@ class ResumeParserService
         }
 
         $text = trim($text);
+        
+        // Sanitize the text to ensure it's valid UTF-8, replacing invalid sequences
+        // This prevents "json_encode error: Malformed UTF-8 characters" when sending to Groq
+        $text = mb_convert_encoding($text, 'UTF-8', 'UTF-8');
 
         if (empty($text) || strlen($text) < 20) {
             throw new InvalidArgumentException(
