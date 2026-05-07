@@ -63,7 +63,7 @@ class DashboardController extends Controller
 
         return $analaticsData;
     }
-    public function CompanyOwnerDashboard()
+    public function companyOwnerDashboard()
     {
         // Get only the company ID (we don't need the full company model yet)
         $companyId = Auth::user()->companies()->value('id'); // fastest: just the ID

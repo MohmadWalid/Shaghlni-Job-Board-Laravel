@@ -16,5 +16,14 @@ class AppServiceProvider extends ServiceProvider
         if (config('app.env') === 'production') {
             \URL::forceScheme('https');
         }
+
+        \Illuminate\Support\Facades\Event::listen(
+            \Illuminate\Auth\Events\Login::class,
+            function ($event) {
+                $event->user->update([
+                    'last_login_at' => now(),
+                ]);
+            }
+        );
     }
 }
