@@ -18,6 +18,7 @@ class JobVacancyController extends Controller
      */
     public function show(JobVacancy $jobVacancy)
     {
+        $jobVacancy->increment('viewCount');
         return view('job-vacancies.show', compact('jobVacancy'));
     }
 
