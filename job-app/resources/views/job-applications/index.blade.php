@@ -312,7 +312,7 @@
                                                     View Details
                                                 </a> --}}
 
-                                                @if($application->ai_generated_score !== null)
+                                                @if($application->ai_generated_feedback != ' ')
                                                 <button @click="showFeedback = !showFeedback"
                                                     class="px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-lg text-sm font-medium transition-all flex items-center gap-2">
                                                     <svg class="w-4 h-4 text-yellow-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -336,7 +336,7 @@
                             </div>
 
                             <!-- AI Feedback Section -->
-                            @if($application->ai_generated_score !== null)
+                            @if($application->ai_generated_feedback != ' ')
                             <div x-show="showFeedback" x-collapse x-cloak class="border-t border-gray-800 bg-gray-900/50">
                                 <div class="p-6">
                                     <div class="flex items-center gap-4 mb-6">

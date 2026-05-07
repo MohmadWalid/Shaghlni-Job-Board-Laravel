@@ -83,8 +83,8 @@ class JobVacancyController extends Controller
             'resume_id'             => $resume->id,
             'user_id'               => Auth::id(),
             'status'                => 'Pending',
-            'ai_generated_score'    => null,
-            'ai_generated_feedback' => null,
+            'ai_generated_score'    => 0,
+            'ai_generated_feedback' => ' ',
         ]);
 
         // 4. Dispatch the background job to evaluate the application

@@ -23,7 +23,7 @@ class JobVacancyFactory extends Factory
             'title' => fake()->jobTitle(),
             'description' => fake()->paragraphs(3, true),
             'location' => fake()->city() . ', ' . fake()->country(),
-            'type' => fake()->randomElement(['Full-time', 'Part-time', 'Contract', 'Remote', 'Hybrid']),
+            'type' => fake()->randomElement(['full-time', 'contract', 'remote', 'hybrid']),
             'salary' => fake()->numberBetween(3000, 15000),
             'required_skills' => json_encode(fake()->words(5)),
             'company_id' => Company::factory(),
