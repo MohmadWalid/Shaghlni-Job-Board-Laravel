@@ -58,10 +58,6 @@ To test the platform, you can use the following pre-seeded accounts:
 | **Admin** | `admin@admin.com` | `12345678` | [Back Office](https://job-backoffice.up.railway.app/login) |
 | **Company Owner** | `darian35@example.net` | `12345678` | [Back Office](https://job-backoffice.up.railway.app/login) |
 | **Job Seeker** | `idietrich@example.com` | `12345678` | [Job App](https://job-app.up.railway.app/login) |
-
-> [!NOTE]
-> These accounts are part of the initial database seed. If you are running locally, you can also find other generated users using `php artisan tinker`.
-
 ---
 
 ## 🛠️ Tech Stack
