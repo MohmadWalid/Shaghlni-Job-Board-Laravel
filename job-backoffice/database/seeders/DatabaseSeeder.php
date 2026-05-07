@@ -126,5 +126,42 @@ class DatabaseSeeder extends Seeder
                 'ai_generated_feedback' => $application['aiGeneratedFeedback'],
             ]);
         }
+
+        // ===================================================
+        // RANDOM LARGE SCALE DATA (Factories)
+        // ===================================================
+        
+        // 1. Create 10 more companies with owners
+        Company::factory()->count(10)->create();
+
+        // 2. Create 30 more job vacancies linked to random companies
+        $all_companies = Company::all();
+        $categories = Category::all();
+
+        JobVacancy::factory()->count(30)->create([
+            'company_id' => fn() => $all_companies->random()->id
+        ])->each(function ($job) use ($categories) {
+            $job->categories()->attach($categories->random(rand(1, 3))->pluck('id'));
+        });
+
+        // 3. Create 100 more job applications
+        $all_jobs = JobVacancy::all();
+        
+        // We create users and resumes first, then applications
+        User::factory()->count(50)->create()->each(function ($user) use ($all_jobs) {
+            // Each user has 1-2 resumes
+            $resumes = Resume::factory()->count(rand(1, 2))->create([
+                'user_id' => $user->id
+            ]);
+
+            // Each user applies to 1-3 jobs
+            foreach($all_jobs->random(rand(1, 3)) as $job) {
+                JobApplication::factory()->create([
+                    'job_vacancy_id' => $job->id,
+                    'user_id' => $user->id,
+                    'resume_id' => $resumes->random()->id,
+                ]);
+            }
+        });
     }
 }
