@@ -77,22 +77,22 @@ class JobVacancyController extends Controller
                 ->withInput();
         }
 
-        // 3. Evaluate resume against job vacancy (graceful — never blocks saving)
-        $evaluation = $evaluator->evaluate($resume, $jobVacancy);
-
-        // 4. Create the application
-        JobApplication::create([
+        // 3. Create the application (score and feedback will be generated asynchronously)
+        $application = JobApplication::create([
             'job_vacancy_id'        => $jobVacancy->id,
             'resume_id'             => $resume->id,
             'user_id'               => Auth::id(),
             'status'                => 'Pending',
-            'ai_generated_score'    => $evaluation['score'],
-            'ai_generated_feedback' => $evaluation['feedback'],
+            'ai_generated_score'    => null,
+            'ai_generated_feedback' => null,
         ]);
+
+        // 4. Dispatch the background job to evaluate the application
+        \App\Jobs\EvaluateApplicationJob::dispatch($application);
 
         return redirect()
             ->route('job-applications.index')
-            ->with('success', 'Application submitted successfully! Your AI compatibility score: ' . $evaluation['score'] . '%');
+            ->with('success', 'Application submitted successfully! Our AI is currently evaluating your resume.');
     }
 
     /**
