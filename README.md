@@ -8,6 +8,7 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.x-38BDF8?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com)
 [![Groq](https://img.shields.io/badge/Groq-Llama_3-f55036?style=for-the-badge)](https://groq.com)
+[![Laravel Queues](https://img.shields.io/badge/Laravel_Queues-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com/docs/queues)
 [![License](https://img.shields.io/badge/License-MIT-22C55E?style=for-the-badge)](LICENSE)
 
 **شغلني** — *"Employ Me"* in Arabic
@@ -28,6 +29,7 @@
 |---|---|
 | **`job-app`** | Job Seeker Portal — browse jobs, apply, track applications |
 | **`job-backoffice`** | Admin & Company Owner Panel — manage companies, vacancies, and applicants |
+| **`job-worker`** | **Job-App-Worker** — Background process handling AI evaluations via Laravel Queues |
 
 This project was built to go **beyond just writing code** — practicing the full engineering process:
 
@@ -53,6 +55,16 @@ This project was built to go **beyond just writing code** — practicing the ful
 **AI/LLM:** Groq API · Llama 3.3 · Background Queues  
 **Database:** MariaDB (Docker) · phpMyAdmin (Docker)  
 **DevOps:** Git · WSL 2 (Ubuntu) · Docker · Railway (hosting)
+
+---
+
+## ⚙️ Background Processing (Queues)
+
+To ensure high performance, this project uses **Laravel Queues** to offload long-running tasks from the main request cycle:
+
+- **Asynchronous Workflow:** When a user submits an application, the AI scoring task is dispatched to a queue. The user gets an immediate response while the worker processes the feedback.
+- **Queue Driver:** Configured to use the `database` driver for reliable task management.
+- **Worker Process:** A dedicated **Job-App-Worker** (running `php artisan queue:work`) continuously monitors and executes jobs in the background.
 
 ---
 
