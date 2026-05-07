@@ -148,7 +148,7 @@
                 <!-- Applications List -->
                 <div class="space-y-4">
                     @foreach ($applications as $application)
-                        <div
+                        <div x-data="{ showFeedback: false }"
                             class="glass-effect rounded-2xl overflow-hidden shadow-xl border border-gray-800 hover:border-gray-700 transition-all duration-300 group">
                             <div class="p-6">
                                 <div class="flex flex-col lg:flex-row lg:items-start gap-4">
@@ -311,11 +311,56 @@
                                                     </svg>
                                                     View Details
                                                 </a> --}}
+
+                                                @if($application->ai_generated_score !== null)
+                                                <button @click="showFeedback = !showFeedback"
+                                                    class="px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-lg text-sm font-medium transition-all flex items-center gap-2">
+                                                    <svg class="w-4 h-4 text-yellow-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                                    </svg>
+                                                    <span x-text="showFeedback ? 'Hide Feedback' : 'AI Feedback'"></span>
+                                                </button>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- AI Feedback Section -->
+                            @if($application->ai_generated_score !== null)
+                            <div x-show="showFeedback" x-collapse x-cloak class="border-t border-gray-800 bg-gray-900/50">
+                                <div class="p-6">
+                                    <div class="flex items-center gap-4 mb-6">
+                                        <div class="flex flex-col items-center justify-center w-16 h-16 rounded-2xl bg-{{ $application->score_color }}-500/20 text-{{ $application->score_color }}-400 border border-{{ $application->score_color }}-500/30">
+                                            <div class="flex items-baseline">
+                                                <span class="text-2xl font-bold">{{ $application->score_out_of10 }}</span>
+                                                <span class="text-sm opacity-70">/10</span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-lg font-bold text-gray-100">AI Compatibility Analysis</h4>
+                                            <p class="text-sm text-gray-400">Based on your resume and the job requirements</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="space-y-3 pl-2">
+                                        @forelse($application->feedback_bullet_points as $point)
+                                        <div class="flex items-start gap-3">
+                                            <div class="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-indigo-500/20 flex items-center justify-center border border-indigo-500/30">
+                                                <svg class="w-3 h-3 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                                </svg>
+                                            </div>
+                                            <p class="text-gray-300 leading-relaxed">{{ $point }}</p>
+                                        </div>
+                                        @empty
+                                        <p class="text-gray-500 italic">No specific feedback generated.</p>
+                                        @endforelse
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
                         </div>
                     @endforeach
                 </div>
