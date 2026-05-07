@@ -25,6 +25,14 @@ class Resume extends Model
         'user_id'
     ];
 
+    /**
+     * Automatically decode JSON columns to PHP arrays when accessed.
+     */
+    protected $casts = [
+        'skills'    => 'array',
+        'education' => 'array',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
