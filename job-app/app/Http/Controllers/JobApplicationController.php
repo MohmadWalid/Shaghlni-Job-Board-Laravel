@@ -14,7 +14,7 @@ class JobApplicationController extends Controller
     public function index(Request $request)
     {
         // 1. Start with user's applications
-        $query = JobApplication::with('job_vacancy')
+        $query = JobApplication::with('job_vacancy.company')
             ->where('user_id', Auth::id());
 
         // 2. Apply filters
