@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
+use App\DTOs\CreateCompanyDTO;
+use App\DTOs\CreateUserDTO;
 
 class CompanyController extends Controller
 {
@@ -59,23 +61,24 @@ class CompanyController extends Controller
      */
     public function store(CompanyCreateRequest $request)
     {
-        $validated = $request->validated();
+        $companyDTO = CreateCompanyDTO::fromRequest($request);
+        $ownerDTO = CreateUserDTO::fromRequest($request);
 
-        DB::transaction(function () use ($validated) {
+        DB::transaction(function () use ($companyDTO, $ownerDTO) {
             // Create owner
             $owner = User::create([
-                'name' => $validated['owner_name'],
-                'email' => $validated['owner_email'],
-                'password' => Hash::make($validated['owner_password']),
-                'role' => 'company-owner',
+                'name' => $ownerDTO->name,
+                'email' => $ownerDTO->email,
+                'password' => Hash::make($ownerDTO->password),
+                'role' => $ownerDTO->role,
             ]);
 
             // Create company and link it to the new owner
             Company::create([
-                'name' => $validated['name'],
-                'address' => $validated['address'],
-                'industry' => $validated['industry'],
-                'website' => $validated['website'],
+                'name' => $companyDTO->name,
+                'address' => $companyDTO->address,
+                'industry' => $companyDTO->industry,
+                'website' => $companyDTO->website,
                 'owner_id' => $owner->id,
             ]);
         });
