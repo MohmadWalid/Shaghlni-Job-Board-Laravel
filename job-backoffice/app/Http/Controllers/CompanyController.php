@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
 use App\DTOs\CreateCompanyDTO;
 use App\DTOs\CreateUserDTO;
+use App\Services\CompanyService;
 
 class CompanyController extends Controller
 {
@@ -64,24 +65,8 @@ class CompanyController extends Controller
         $companyDTO = CreateCompanyDTO::fromRequest($request);
         $ownerDTO = CreateUserDTO::fromRequest($request);
 
-        DB::transaction(function () use ($companyDTO, $ownerDTO) {
-            // Create owner
-            $owner = User::create([
-                'name' => $ownerDTO->name,
-                'email' => $ownerDTO->email,
-                'password' => Hash::make($ownerDTO->password),
-                'role' => $ownerDTO->role,
-            ]);
-
-            // Create company and link it to the new owner
-            Company::create([
-                'name' => $companyDTO->name,
-                'address' => $companyDTO->address,
-                'industry' => $companyDTO->industry,
-                'website' => $companyDTO->website,
-                'owner_id' => $owner->id,
-            ]);
-        });
+        $service = new CompanyService();
+        $service->createCompanyWithOwner($companyDTO, $ownerDTO);   
 
         return redirect()->route('companies.index')->with('success', 'Company created successfully!');
     }
