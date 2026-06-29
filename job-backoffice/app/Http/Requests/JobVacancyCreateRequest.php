@@ -55,4 +55,14 @@ class JobVacancyCreateRequest extends FormRequest
             'category_ids.*.exists'   => 'One or more selected categories are invalid.',
         ];
     }
+
+    protected function prepareForValidation()
+    {
+        if (auth()->user() && auth()->user()->role === 'company-owner') {
+            $company = auth()->user()->companies()->first();
+            $this->merge([
+                'company_id' => $company?->id,
+            ]);
+        }
+    }
 }

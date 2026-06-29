@@ -9,6 +9,7 @@ use App\Models\Company;
 use App\Models\JobVacancy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class JobVacancyController extends Controller
 {
@@ -41,7 +42,9 @@ class JobVacancyController extends Controller
      */
     public function create()
     {
-        $companies = Company::all();
+        $companies = Auth::user()->role === 'company-owner'
+            ? Auth::user()->companies
+            : Company::all();
         $categories = Category::all();
 
         return view('job-vacancy.create', compact('companies', 'categories'));
@@ -64,6 +67,7 @@ class JobVacancyController extends Controller
     public function show(string $id)
     {
         $jobVacancy = JobVacancy::findOrFail($id);
+        Gate::authorize('view', $jobVacancy);
 
         return view('job-vacancy.show', compact('jobVacancy'));
     }
@@ -74,7 +78,11 @@ class JobVacancyController extends Controller
     public function edit(string $id)
     {
         $jobVacancy = JobVacancy::findOrFail($id);
-        $companies = Company::all();
+        Gate::authorize('update', $jobVacancy);
+
+        $companies = Auth::user()->role === 'company-owner'
+            ? Auth::user()->companies
+            : Company::all();
         $categories = Category::all();
 
         return view('job-vacancy.edit', compact('jobVacancy', 'companies', 'categories'));
@@ -86,6 +94,7 @@ class JobVacancyController extends Controller
     public function update(JobVacancyUpdateRequest $request, string $id)
     {
         $jobVacancy = JobVacancy::findOrFail($id);
+        Gate::authorize('update', $jobVacancy);
         $jobVacancy->update($request->validated());
         $jobVacancy->categories()->sync($request->category_ids);
 
@@ -104,6 +113,7 @@ class JobVacancyController extends Controller
     public function destroy(string $id)
     {
         $jobVacancy = JobVacancy::findOrFail($id);
+        Gate::authorize('delete', $jobVacancy);
         $jobVacancy->delete();
         return redirect()->route('job-vacancies.index')->with('success', 'Job Vacancy archived successfully!');
     }
@@ -111,6 +121,7 @@ class JobVacancyController extends Controller
     public function restore(string $id)
     {
         $jobVacancy = JobVacancy::withTrashed()->findOrFail($id);
+        Gate::authorize('restore', $jobVacancy);
         $jobVacancy->restore();
         return redirect()->route('job-vacancies.index', ['archived' => 'true'])->with('success', 'Job Vacancy restored successfully!');
     }

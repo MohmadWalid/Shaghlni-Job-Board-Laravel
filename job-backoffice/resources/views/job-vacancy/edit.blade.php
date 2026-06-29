@@ -66,27 +66,39 @@
                             @enderror
                         </div>
 
-                        <!-- Company Dropdown -->
+                        <!-- Company Field -->
                         <div class="mb-4">
                             <label for="company_id" class="block text-sm font-medium text-gray-700">Company</label>
-                            <div class="relative mt-1">
-                                <select name="company_id" id="company_id"
-                                    class="appearance-none w-full rounded-md shadow-sm sm:text-sm p-2 pr-10 transition-colors duration-200
-                        {{ $errors->has('company_id') ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-indigo-500' }}
-                        border focus:border-indigo-500 focus:outline-none focus:ring-2 bg-white cursor-pointer
-                        hover:border-indigo-400">
-                                    <option value="" disabled>Select a Company</option>
-                                    @foreach ($companies as $company)
-                                        <option value="{{ $company->id }}"
-                                            {{ old('company_id', $jobVacancy->company_id) == $company->id ? 'selected' : '' }}>
-                                            {{ $company->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            @error('company_id')
-                                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                            @enderror
+                            @if (auth()->user()->role === 'company-owner')
+                                @php
+                                    $userCompany = auth()->user()->companies()->first();
+                                @endphp
+                                <div class="mt-1">
+                                    <input type="text" value="{{ $userCompany?->name ?? 'No Company Assigned' }}"
+                                        class="mt-1 block w-full rounded-md border border-gray-300 bg-gray-100 shadow-sm sm:text-sm p-3 text-gray-500 cursor-not-allowed"
+                                        disabled readonly>
+                                    <input type="hidden" name="company_id" value="{{ $userCompany?->id }}">
+                                </div>
+                            @else
+                                <div class="relative mt-1">
+                                    <select name="company_id" id="company_id"
+                                        class="appearance-none w-full rounded-md shadow-sm sm:text-sm p-2 pr-10 transition-colors duration-200
+                            {{ $errors->has('company_id') ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-indigo-500' }}
+                            border focus:border-indigo-500 focus:outline-none focus:ring-2 bg-white cursor-pointer
+                            hover:border-indigo-400">
+                                        <option value="" disabled>Select a Company</option>
+                                        @foreach ($companies as $company)
+                                            <option value="{{ $company->id }}"
+                                                {{ old('company_id', $jobVacancy->company_id) == $company->id ? 'selected' : '' }}>
+                                                {{ $company->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('company_id')
+                                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                @enderror
+                            @endif
                         </div>
 
                         <!-- Type Dropdown -->
